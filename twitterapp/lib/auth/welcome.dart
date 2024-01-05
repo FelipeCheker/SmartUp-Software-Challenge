@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:twitterapp/auth/signup.dart';
+import 'package:twitterapp/auth/logIn.dart';
+import 'package:twitterapp/services/googleAuth.dart';
+import 'package:twitterapp/services/homeScreen.dart';
 
 class welcomeScreen extends StatelessWidget {
   @override
@@ -43,8 +46,8 @@ class welcomeScreen extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.white,
-                    onPrimary: Colors.black,
+                    primary: Colors.blue,
+                    onPrimary: Colors.white,
                   ),
                   child: const Text(
                     'Create Account',
@@ -53,38 +56,52 @@ class welcomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               SizedBox(
-                width: 300,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () {
-                    // Sign in with Google logic
-                    // Add Google sign-in logic here
-                  },
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.white,
-                    onPrimary: Colors.black,
-                  ),
-                  child: const Text(
-                    'Sign in with Google',
-                  ),
-                ),
-              ),
+                  width: 300,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      dynamic result =
+                          await signInWithGoogle(); // Llama a la función de inicio de sesión con Google y espera la respuesta
+                      if (result != null) {
+                        // Si el inicio de sesión es exitoso, realiza alguna acción, por ejemplo, navegar a otra pantalla
+                        // Puedes reemplazar 'YourNextScreen()' con la pantalla a la que deseas navegar después del inicio de sesión exitoso
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => homeScreen()),
+                        );
+                      } else {
+                        // Maneja el caso en el que el inicio de sesión no es exitoso
+                        // Puede mostrar un mensaje de error, redirigir a una pantalla de error, etc.
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.white,
+                      onPrimary: Colors.black,
+                    ),
+                    child: const Text(
+                      'Sign in with Google',
+                    ),
+                  )),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text(
+                  const Text(
                     'Have an account already?',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.grey,
                     ),
                   ),
                   TextButton(
                     onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => logInScreen()));
                       // Navigate to the login screen
                       // Add navigation logic here
                     },
-                    child: Text(
+                    child: const Text(
                       'Login',
                       style: TextStyle(
                         color: Colors.white,

@@ -2,9 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:twitterapp/services/homeScreen.dart';
 
-class SignUpScreen extends StatelessWidget {
-  FirebaseAuth auth = FirebaseAuth.instance;
-
+class logInScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
@@ -66,16 +64,16 @@ class SignUpScreen extends StatelessWidget {
             const SizedBox(height: 20.0),
             TextFormField(
               controller: nameController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Name',
-                labelStyle: TextStyle(color: Colors.white),
-                border: OutlineInputBorder(),
-                enabledBorder: UnderlineInputBorder(
-                  //<-- SEE HERE
-                  borderSide: BorderSide(
-                    width: 3,
+                labelStyle: const TextStyle(color: Colors.white),
+                border: const OutlineInputBorder(),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(
+                    width: 5, //<-- SEE HERE
                     color: Colors.white,
                   ),
+                  borderRadius: BorderRadius.circular(50.0),
                 ),
               ),
               style: const TextStyle(color: Colors.white),
@@ -86,16 +84,16 @@ class SignUpScreen extends StatelessWidget {
               onChanged: (val) => emailController.text = val,
               controller: emailController,
               keyboardType: TextInputType.emailAddress,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Phone number or email adress',
-                labelStyle: TextStyle(color: Colors.white),
-                border: OutlineInputBorder(),
-                enabledBorder: UnderlineInputBorder(
-                  //<-- SEE HERE
-                  borderSide: BorderSide(
-                    width: 3,
+                labelStyle: const TextStyle(color: Colors.white),
+                border: const OutlineInputBorder(),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(
+                    width: 5, //<-- SEE HERE
                     color: Colors.white,
                   ),
+                  borderRadius: BorderRadius.circular(50.0),
                 ),
               ),
               style: const TextStyle(color: Colors.white),
@@ -104,16 +102,16 @@ class SignUpScreen extends StatelessWidget {
             TextFormField(
               controller: passwordController,
               obscureText: true,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Date of birth',
-                labelStyle: TextStyle(color: Colors.white),
-                border: OutlineInputBorder(),
-                enabledBorder: UnderlineInputBorder(
-                  //<-- SEE HERE
-                  borderSide: BorderSide(
-                    width: 3,
+                labelStyle: const TextStyle(color: Colors.white),
+                border: const OutlineInputBorder(),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(
+                    width: 5, //<-- SEE HERE
                     color: Colors.white,
                   ),
+                  borderRadius: BorderRadius.circular(50.0),
                 ),
               ),
               style: const TextStyle(color: Colors.white),
