@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:twitterapp/auth/signup2.dart';
-import 'package:twitterapp/services/homeScreen.dart';
 
 class SignUpScreen extends StatelessWidget {
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -9,6 +8,8 @@ class SignUpScreen extends StatelessWidget {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController dateOfBirthController = TextEditingController();
+
+  SignUpScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +27,12 @@ class SignUpScreen extends StatelessWidget {
           },
         ),
         centerTitle: true,
-        title: Image.asset(
-          'assets/images/logo.png',
-          height: 50,
-          width: 50,
+        title: SizedBox(
+          height: 25,
+          child: Image.asset(
+            'assets/images/logo.png',
+            fit: BoxFit.contain,
+          ),
         ),
       ),
       body: Padding(
@@ -126,7 +129,8 @@ class SignUpScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => getPassSingUp(emailController)),
+                          builder: (context) =>
+                              getPassSingUp(emailController, nameController)),
                     );
                   } else {
                     // Mostrar un diálogo, snackbar o mensaje indicando que los campos son obligatorios
@@ -134,15 +138,15 @@ class SignUpScreen extends StatelessWidget {
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('Incomplete Fields'),
-                          content:
-                              Text('Please fill in all the required fields.'),
+                          title: const Text('Incomplete Fields'),
+                          content: const Text(
+                              'Please fill in all the required fields.'),
                           actions: [
                             TextButton(
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
-                              child: Text('OK'),
+                              child: const Text('OK'),
                             ),
                           ],
                         );
@@ -151,7 +155,7 @@ class SignUpScreen extends StatelessWidget {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.blueAccent,
+                  backgroundColor: Colors.blueAccent,
                 ),
                 child: const Text(
                   'Next',

@@ -1,28 +1,31 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:twitterapp/services/firebaseAuth.dart';
-import 'package:twitterapp/services/homeScreen.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:twitterapp/screens/homeScreen.dart';
+import 'package:twitterapp/auth/services/firebaseAuth.dart';
 
 class getPass extends StatelessWidget {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController emailController;
   final FirebaseAuthService _auth = FirebaseAuthService();
 
-  getPass(this.emailController);
+  getPass(this.emailController, {super.key});
 
   void signInAction(BuildContext context) async {
     User? user = await _auth.signInWithEmailAndPassword(
         emailController.text, passwordController.text);
-
     if (user != null) {
       print("User is successfully signed in");
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => homeScreen()),
+        MaterialPageRoute(builder: (context) => const homeScreen()),
       );
     } else {
-      print("some error occured");
+      Alert(
+              context: context,
+              title: "Incorrect email or password",
+              desc: "try again.")
+          .show();
     }
   }
 
@@ -42,10 +45,12 @@ class getPass extends StatelessWidget {
           }, // Color al pasar el mouse
         ),
         centerTitle: true,
-        title: Image.asset(
-          'assets/images/logo.png',
-          height: 50,
-          width: 50,
+        title: SizedBox(
+          height: 25,
+          child: Image.asset(
+            'assets/images/logo.png',
+            fit: BoxFit.contain,
+          ),
         ),
       ),
       body: Padding(
@@ -65,6 +70,8 @@ class getPass extends StatelessWidget {
             const SizedBox(height: 20.0),
             TextFormField(
               controller: passwordController,
+              keyboardType: TextInputType.visiblePassword,
+              obscureText: true,
               decoration: const InputDecoration(
                 labelText: 'Password',
                 labelStyle: TextStyle(color: Colors.white),
@@ -86,23 +93,57 @@ class getPass extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        color: Colors.black,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: ElevatedButton(
-            onPressed: () {
-              signInAction(context);
-            },
-            style: ElevatedButton.styleFrom(
-              primary: Colors.blueAccent,
-            ),
-            child: const Text(
-              'Next',
-              style: TextStyle(
-                color: Colors.white,
+        color: Colors.black, // Color de la barra de navegación inferior
+        child: Row(
+          mainAxisAlignment:
+              MainAxisAlignment.end, // Alinea el botón a la derecha
+          children: [
+            const SizedBox(
+                width:
+                    16), // Espacio a la derecha para separar el botón del borde
+            SizedBox(
+              // Define el tamaño del botón
+              width: 100, // Ancho del botón
+              height: 40, // Alto del botón
+              child: ElevatedButton(
+                onPressed: () {
+                  if (emailController.text.isNotEmpty &&
+                      passwordController.text.isNotEmpty) {
+                    signInAction(context);
+                  } else {
+                    // Mostrar un diálogo, snackbar o mensaje indicando que los campos son obligatorios
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('Incomplete Fields'),
+                          content: const Text(
+                              'Please fill in all the required fields.'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blueAccent,
+                ),
+                child: const Text(
+                  'Next',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
               ),
             ),
-          ),
+          ],
         ),
       ),
     );

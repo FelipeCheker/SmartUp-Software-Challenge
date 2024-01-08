@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:twitterapp/auth/signup.dart';
-import 'package:twitterapp/auth/logIn.dart';
-import 'package:twitterapp/services/googleAuth.dart';
-import 'package:twitterapp/services/homeScreen.dart';
+import 'package:twitterapp/screens/signup.dart';
+import 'package:twitterapp/screens/logIn.dart';
+import 'package:twitterapp/screens/homeScreen.dart';
+import 'package:twitterapp/auth/services/googleAuth.dart';
 
 class welcomeScreen extends StatelessWidget {
+  const welcomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
         centerTitle: true,
-        title: Image.asset(
-          'assets/images/logo.png',
-          height: 50,
-          width: 50,
+        title: SizedBox(
+          height: 25,
+          child: Image.asset(
+            'assets/images/logo.png',
+            fit: BoxFit.contain,
+          ),
         ),
       ),
       body: Container(
@@ -46,8 +50,8 @@ class welcomeScreen extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.blue,
-                    onPrimary: Colors.white,
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.blue,
                   ),
                   child: const Text(
                     'Create Account',
@@ -67,7 +71,8 @@ class welcomeScreen extends StatelessWidget {
                         // Puedes reemplazar 'YourNextScreen()' con la pantalla a la que deseas navegar después del inicio de sesión exitoso
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => homeScreen()),
+                          MaterialPageRoute(
+                              builder: (context) => const homeScreen()),
                         );
                       } else {
                         // Maneja el caso en el que el inicio de sesión no es exitoso
@@ -75,8 +80,8 @@ class welcomeScreen extends StatelessWidget {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.white,
-                      onPrimary: Colors.black,
+                      foregroundColor: Colors.black,
+                      backgroundColor: Colors.white,
                     ),
                     child: const Text(
                       'Sign in with Google',

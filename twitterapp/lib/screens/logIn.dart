@@ -1,50 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
-import 'package:twitterapp/auth/services/user.dart';
-import 'package:twitterapp/screens/homeScreen.dart';
+import 'package:twitterapp/auth/logIn2.dart';
 
-class getPassSingUp extends StatelessWidget {
-  getPassSingUp(this.emailController, this.nameController);
+class logInScreen extends StatelessWidget {
+  final TextEditingController emailController = TextEditingController();
 
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController emailController;
-  final TextEditingController nameController;
-
-  void signUpAction(BuildContext context) async {
-    try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
-      User? updateUser = FirebaseAuth.instance.currentUser;
-      updateUser?.updateDisplayName(nameController.text);
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const homeScreen()),
-      );
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
-        Alert(
-                context: context,
-                title: "The password provided is too weak.",
-                desc: "try again.")
-            .show();
-      } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
-        Alert(
-                context: context,
-                title: "The account already exists for that email.",
-                desc: "try again.")
-            .show();
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
+  logInScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +19,7 @@ class getPassSingUp extends StatelessWidget {
           ),
           onPressed: () {
             Navigator.of(context).pop();
-          },
+          }, // Color al pasar el mouse
         ),
         centerTitle: true,
         title: SizedBox(
@@ -77,7 +37,7 @@ class getPassSingUp extends StatelessWidget {
           children: [
             const SizedBox(height: 40.0),
             const Text(
-              'Choose your password.',
+              'To get started, first enter your phone, email, or @username',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 30,
@@ -86,15 +46,13 @@ class getPassSingUp extends StatelessWidget {
             ),
             const SizedBox(height: 20.0),
             TextFormField(
-              onChanged: (val) => passwordController.text = val,
-              controller: passwordController,
-              keyboardType: TextInputType.visiblePassword,
-              obscureText: true,
+              controller: emailController,
               decoration: const InputDecoration(
-                labelText: 'Password',
+                labelText: 'Phone, email or username ',
                 labelStyle: TextStyle(color: Colors.white),
                 border: OutlineInputBorder(),
                 enabledBorder: UnderlineInputBorder(
+                  //<-- SEE HERE
                   borderSide: BorderSide(
                     width: 1,
                     color: Colors.white,
@@ -102,32 +60,43 @@ class getPassSingUp extends StatelessWidget {
                 ),
               ),
               style: const TextStyle(color: Colors.white),
+              onChanged: (val) => emailController.text = val,
             ),
+            const SizedBox(height: 16.0),
             const SizedBox(height: 24.0),
           ],
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        color: Colors.black,
+        color: Colors.black, // Color de la barra de navegación inferior
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment:
+              MainAxisAlignment.end, // Alinea el botón a la derecha
           children: [
-            const SizedBox(width: 16),
+            const SizedBox(
+                width:
+                    16), // Espacio a la derecha para separar el botón del borde
             SizedBox(
-              width: 100,
-              height: 40,
+              // Define el tamaño del botón
+              width: 100, // Ancho del botón
+              height: 40, // Alto del botón
               child: ElevatedButton(
                 onPressed: () {
-                  if (passwordController.text.isNotEmpty) {
-                    signUpAction(context);
+                  if (emailController.text.isNotEmpty) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => getPass(emailController)),
+                    );
                   } else {
-                    // Show a dialog, snackbar, or message indicating that the password field is required
+                    // Mostrar un diálogo, snackbar o mensaje indicando que los campos son obligatorios
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: const Text('Password Required'),
-                          content: const Text('Please enter your password.'),
+                          title: const Text('Incomplete Fields'),
+                          content: const Text(
+                              'Please fill in all the required fields.'),
                           actions: [
                             TextButton(
                               onPressed: () {
