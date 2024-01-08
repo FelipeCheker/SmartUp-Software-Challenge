@@ -19,7 +19,7 @@ class getPass extends StatelessWidget {
       print("User is successfully signed in");
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => getPass(emailController)),
+        MaterialPageRoute(builder: (context) => homeScreen()),
       );
     } else {
       print("some error occured");

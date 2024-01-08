@@ -4,12 +4,15 @@ class homeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        title: Image.asset(
-          'assets/logo.png', // Ruta de la imagen del logo de Twitter
-          height: 40,
+        backgroundColor: Colors.black,
+        title: Center(
+          child: Image.asset(
+            'assets/images/logo.png',
+            height: 50,
+            width: 50,
+          ),
         ),
         actions: [
           IconButton(
@@ -29,7 +32,7 @@ class homeScreen extends StatelessWidget {
       body: ListView(
         children: [
           Container(
-            color: Colors.white,
+            color: Colors.black,
             padding: EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
