@@ -102,9 +102,9 @@ class welcomeScreen extends StatelessWidget {
                       // Add navigation logic here
                     },
                     child: const Text(
-                      'Login',
+                      'Log in',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.blue,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

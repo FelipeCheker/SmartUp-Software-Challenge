@@ -1,8 +1,30 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:twitterapp/auth/logIn2.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:twitterapp/services/firebaseAuth.dart';
+import 'package:twitterapp/services/homeScreen.dart';
 
-class logInScreen extends StatelessWidget {
-  final TextEditingController emailController = TextEditingController();
+class getPass extends StatelessWidget {
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController emailController;
+  final FirebaseAuthService _auth = FirebaseAuthService();
+
+  getPass(this.emailController);
+
+  void signInAction(BuildContext context) async {
+    User? user = await _auth.signInWithEmailAndPassword(
+        emailController.text, passwordController.text);
+
+    if (user != null) {
+      print("User is successfully signed in");
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => getPass(emailController)),
+      );
+    } else {
+      print("some error occured");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +55,7 @@ class logInScreen extends StatelessWidget {
           children: [
             const SizedBox(height: 40.0),
             const Text(
-              'To get started, first enter your phone, email, or @username',
+              'Enter your password',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 30,
@@ -42,9 +64,9 @@ class logInScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20.0),
             TextFormField(
-              controller: emailController,
+              controller: passwordController,
               decoration: const InputDecoration(
-                labelText: 'Phone, email or username ',
+                labelText: 'Password',
                 labelStyle: TextStyle(color: Colors.white),
                 border: OutlineInputBorder(),
                 enabledBorder: UnderlineInputBorder(
@@ -56,7 +78,7 @@ class logInScreen extends StatelessWidget {
                 ),
               ),
               style: const TextStyle(color: Colors.white),
-              onChanged: (val) => emailController.text = val,
+              onChanged: (val) => passwordController.text = val,
             ),
             const SizedBox(height: 16.0),
             const SizedBox(height: 24.0),
@@ -64,24 +86,20 @@ class logInScreen extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        color: Colors.black, // Color de la barra de navegación inferior
+        color: Colors.black,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: ElevatedButton(
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => getPass(emailController)),
-              );
+              signInAction(context);
             },
             style: ElevatedButton.styleFrom(
-              primary: Colors.blueAccent, // Cambia el color del botón a celeste
+              primary: Colors.blueAccent,
             ),
             child: const Text(
               'Next',
               style: TextStyle(
-                color: Colors.white, // Cambia el color del texto a blanco
+                color: Colors.white,
               ),
             ),
           ),

@@ -8,7 +8,7 @@ class homeScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         title: Image.asset(
-          'assets/twitter_logo.png', // Ruta de la imagen del logo de Twitter
+          'assets/logo.png', // Ruta de la imagen del logo de Twitter
           height: 40,
         ),
         actions: [

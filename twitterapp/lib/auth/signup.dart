@@ -1,31 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:twitterapp/auth/signup2.dart';
 import 'package:twitterapp/services/homeScreen.dart';
 
 class SignUpScreen extends StatelessWidget {
   FirebaseAuth auth = FirebaseAuth.instance;
 
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
-
-  void signUpAction() async {
-    try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController dateOfBirthController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +17,9 @@ class SignUpScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.black,
         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.white,
+          icon: const Icon(
+            Icons.close,
+            color: Colors.blue,
           ),
           onPressed: () {
             Navigator.of(context).pop();
@@ -56,7 +39,7 @@ class SignUpScreen extends StatelessWidget {
           children: [
             const SizedBox(height: 40.0),
             const Text(
-              'Create Account',
+              'Create your account',
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 30,
@@ -73,7 +56,7 @@ class SignUpScreen extends StatelessWidget {
                 enabledBorder: UnderlineInputBorder(
                   //<-- SEE HERE
                   borderSide: BorderSide(
-                    width: 3,
+                    width: 1,
                     color: Colors.white,
                   ),
                 ),
@@ -93,7 +76,7 @@ class SignUpScreen extends StatelessWidget {
                 enabledBorder: UnderlineInputBorder(
                   //<-- SEE HERE
                   borderSide: BorderSide(
-                    width: 3,
+                    width: 1,
                     color: Colors.white,
                   ),
                 ),
@@ -102,8 +85,7 @@ class SignUpScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16.0),
             TextFormField(
-              controller: passwordController,
-              obscureText: true,
+              controller: dateOfBirthController,
               decoration: const InputDecoration(
                 labelText: 'Date of birth',
                 labelStyle: TextStyle(color: Colors.white),
@@ -111,13 +93,13 @@ class SignUpScreen extends StatelessWidget {
                 enabledBorder: UnderlineInputBorder(
                   //<-- SEE HERE
                   borderSide: BorderSide(
-                    width: 3,
+                    width: 1,
                     color: Colors.white,
                   ),
                 ),
               ),
               style: const TextStyle(color: Colors.white),
-              onChanged: (val) => passwordController.text = val,
+              onChanged: (val) => dateOfBirthController.text = val,
             ),
             const SizedBox(height: 24.0),
           ],
@@ -125,26 +107,61 @@ class SignUpScreen extends StatelessWidget {
       ),
       bottomNavigationBar: BottomAppBar(
         color: Colors.black, // Color de la barra de navegación inferior
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => homeScreen()),
-              );
-              signUpAction();
-            },
-            style: ElevatedButton.styleFrom(
-              primary: Colors.blueAccent, // Cambia el color del botón a celeste
-            ),
-            child: const Text(
-              'Next',
-              style: TextStyle(
-                color: Colors.white, // Cambia el color del texto a blanco
+        child: Row(
+          mainAxisAlignment:
+              MainAxisAlignment.end, // Alinea el botón a la derecha
+          children: [
+            const SizedBox(
+                width:
+                    16), // Espacio a la derecha para separar el botón del borde
+            SizedBox(
+              // Define el tamaño del botón
+              width: 100, // Ancho del botón
+              height: 40, // Alto del botón
+              child: ElevatedButton(
+                onPressed: () {
+                  if (nameController.text.isNotEmpty &&
+                      emailController.text.isNotEmpty &&
+                      dateOfBirthController.text.isNotEmpty) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => getPassSingUp(emailController)),
+                    );
+                  } else {
+                    // Mostrar un diálogo, snackbar o mensaje indicando que los campos son obligatorios
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Incomplete Fields'),
+                          content:
+                              Text('Please fill in all the required fields.'),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: Text('OK'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.blueAccent,
+                ),
+                child: const Text(
+                  'Next',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
               ),
             ),
-          ),
+          ],
         ),
       ),
     );
