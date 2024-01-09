@@ -19,7 +19,7 @@ class logInScreen extends StatelessWidget {
           ),
           onPressed: () {
             Navigator.of(context).pop();
-          }, // Color al pasar el mouse
+          },
         ),
         centerTitle: true,
         title: SizedBox(
@@ -52,7 +52,6 @@ class logInScreen extends StatelessWidget {
                 labelStyle: TextStyle(color: Colors.white),
                 border: OutlineInputBorder(),
                 enabledBorder: UnderlineInputBorder(
-                  //<-- SEE HERE
                   borderSide: BorderSide(
                     width: 1,
                     color: Colors.white,
@@ -68,18 +67,14 @@ class logInScreen extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        color: Colors.black, // Color de la barra de navegación inferior
+        color: Colors.black,
         child: Row(
-          mainAxisAlignment:
-              MainAxisAlignment.end, // Alinea el botón a la derecha
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            const SizedBox(
-                width:
-                    16), // Espacio a la derecha para separar el botón del borde
+            const SizedBox(width: 16),
             SizedBox(
-              // Define el tamaño del botón
-              width: 100, // Ancho del botón
-              height: 40, // Alto del botón
+              width: 100,
+              height: 40,
               child: ElevatedButton(
                 onPressed: () {
                   if (emailController.text.isNotEmpty) {
@@ -89,7 +84,6 @@ class logInScreen extends StatelessWidget {
                           builder: (context) => getPass(emailController)),
                     );
                   } else {
-                    // Mostrar un diálogo, snackbar o mensaje indicando que los campos son obligatorios
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {

@@ -38,12 +38,34 @@ class welcomeScreen extends StatelessWidget {
               ),
               const SizedBox(height: 50),
               SizedBox(
+                  width: 300,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      dynamic result = await signInWithGoogle();
+                      print(result);
+                      if (result != null) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const homeScreen()),
+                        );
+                      } else {}
+                    },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.black,
+                      backgroundColor: Colors.white,
+                    ),
+                    child: const Text(
+                      'Sign in with Google',
+                    ),
+                  )),
+              const SizedBox(height: 20),
+              SizedBox(
                 width: 300,
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Navigate to the account creation screen
-                    // Replace 'YourScreen()' with the screen you want to navigate to
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => SignUpScreen()),
@@ -58,35 +80,6 @@ class welcomeScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
-              SizedBox(
-                  width: 300,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      dynamic result =
-                          await signInWithGoogle(); // Llama a la función de inicio de sesión con Google y espera la respuesta
-                      if (result != null) {
-                        // Si el inicio de sesión es exitoso, realiza alguna acción, por ejemplo, navegar a otra pantalla
-                        // Puedes reemplazar 'YourNextScreen()' con la pantalla a la que deseas navegar después del inicio de sesión exitoso
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const homeScreen()),
-                        );
-                      } else {
-                        // Maneja el caso en el que el inicio de sesión no es exitoso
-                        // Puede mostrar un mensaje de error, redirigir a una pantalla de error, etc.
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.black,
-                      backgroundColor: Colors.white,
-                    ),
-                    child: const Text(
-                      'Sign in with Google',
-                    ),
-                  )),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -103,8 +96,6 @@ class welcomeScreen extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                               builder: (context) => logInScreen()));
-                      // Navigate to the login screen
-                      // Add navigation logic here
                     },
                     child: const Text(
                       'Log in',

@@ -1,5 +1,9 @@
+import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:twitterapp/auth/services/tweetRepository.dart';
 import 'package:twitterapp/auth/tweet.dart';
 
 class tweetScreen extends StatefulWidget {
@@ -12,17 +16,22 @@ class tweetScreen extends StatefulWidget {
 class _TweetScreenState extends State<tweetScreen> {
   final TextEditingController _tweetController = TextEditingController();
 
+  final TweetRepository tweetRepository = TweetRepository(
+    firestore: FirebaseFirestore.instance,
+    firestorage: FirebaseStorage.instance,
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Tweet'),
+        title: const Text('Tweet'),
         actions: [
           TextButton(
             onPressed: () {
               _postTweet();
             },
-            child: Text(
+            child: const Text(
               'Tweet',
               style: TextStyle(
                 color: Colors.blue,
@@ -38,7 +47,7 @@ class _TweetScreenState extends State<tweetScreen> {
           controller: _tweetController,
           maxLines: null,
           keyboardType: TextInputType.multiline,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             hintText: 'What\'s happening?',
             border: InputBorder.none,
           ),
@@ -47,7 +56,12 @@ class _TweetScreenState extends State<tweetScreen> {
     );
   }
 
-  void _postTweet() {
+  int getRandomInteger() {
+    final random = Random();
+    return random.nextInt(1);
+  }
+
+  Future<void> _postTweet() async {
     User? user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
@@ -61,7 +75,9 @@ class _TweetScreenState extends State<tweetScreen> {
           userName: userNameFb,
           userHandle: userHandleFb,
           tweetContent: tweetContent,
+          id: getRandomInteger().toString(),
         );
+        Tweet? addedTweet = await tweetRepository.addTweet(tweet: newTweet);
         Navigator.pop(context, newTweet);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

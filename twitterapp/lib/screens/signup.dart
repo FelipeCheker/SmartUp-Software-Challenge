@@ -1,15 +1,36 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:twitterapp/auth/signup2.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class SignUpScreen extends StatelessWidget {
-  FirebaseAuth auth = FirebaseAuth.instance;
+class SignUpScreen extends StatefulWidget {
+  SignUpScreen({Key? key}) : super(key: key);
+
+  @override
+  _SignUpScreenState createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
+  final FirebaseAuth auth = FirebaseAuth.instance;
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController dateOfBirthController = TextEditingController();
 
-  SignUpScreen({super.key});
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now(),
+    );
+    if (picked != null) {
+      final formattedDate = DateFormat('dd-MM-yyyy').format(picked);
+      setState(() {
+        dateOfBirthController.text = formattedDate;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +78,6 @@ class SignUpScreen extends StatelessWidget {
                 labelStyle: TextStyle(color: Colors.white),
                 border: OutlineInputBorder(),
                 enabledBorder: UnderlineInputBorder(
-                  //<-- SEE HERE
                   borderSide: BorderSide(
                     width: 1,
                     color: Colors.white,
@@ -65,11 +85,11 @@ class SignUpScreen extends StatelessWidget {
                 ),
               ),
               style: const TextStyle(color: Colors.white),
-              onChanged: (val) => nameController.text = val,
+              onChanged: (val) => setState(() {}),
             ),
             const SizedBox(height: 16.0),
             TextFormField(
-              onChanged: (val) => emailController.text = val,
+              onChanged: (val) => setState(() {}),
               controller: emailController,
               keyboardType: TextInputType.emailAddress,
               decoration: const InputDecoration(
@@ -77,7 +97,6 @@ class SignUpScreen extends StatelessWidget {
                 labelStyle: TextStyle(color: Colors.white),
                 border: OutlineInputBorder(),
                 enabledBorder: UnderlineInputBorder(
-                  //<-- SEE HERE
                   borderSide: BorderSide(
                     width: 1,
                     color: Colors.white,
@@ -89,38 +108,40 @@ class SignUpScreen extends StatelessWidget {
             const SizedBox(height: 16.0),
             TextFormField(
               controller: dateOfBirthController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Date of birth',
-                labelStyle: TextStyle(color: Colors.white),
-                border: OutlineInputBorder(),
-                enabledBorder: UnderlineInputBorder(
-                  //<-- SEE HERE
+                labelStyle: const TextStyle(color: Colors.white),
+                border: const OutlineInputBorder(),
+                enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(
                     width: 1,
                     color: Colors.white,
                   ),
                 ),
+                suffixIcon: IconButton(
+                  icon: const Icon(
+                    Icons.calendar_today,
+                    color: Colors.white,
+                  ),
+                  onPressed: () => _selectDate(context),
+                ),
               ),
               style: const TextStyle(color: Colors.white),
-              onChanged: (val) => dateOfBirthController.text = val,
+              readOnly: true,
             ),
             const SizedBox(height: 24.0),
           ],
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        color: Colors.black, // Color de la barra de navegación inferior
+        color: Colors.black,
         child: Row(
-          mainAxisAlignment:
-              MainAxisAlignment.end, // Alinea el botón a la derecha
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            const SizedBox(
-                width:
-                    16), // Espacio a la derecha para separar el botón del borde
+            const SizedBox(width: 16),
             SizedBox(
-              // Define el tamaño del botón
-              width: 100, // Ancho del botón
-              height: 40, // Alto del botón
+              width: 100,
+              height: 40,
               child: ElevatedButton(
                 onPressed: () {
                   if (nameController.text.isNotEmpty &&
@@ -129,11 +150,13 @@ class SignUpScreen extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              getPassSingUp(emailController, nameController)),
+                        builder: (context) => getPassSingUp(
+                          emailController,
+                          nameController,
+                        ),
+                      ),
                     );
                   } else {
-                    // Mostrar un diálogo, snackbar o mensaje indicando que los campos son obligatorios
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {

@@ -4,6 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 Future<dynamic> signInWithGoogle() async {
   try {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    print(googleUser);
 
     final GoogleSignInAuthentication? googleAuth =
         await googleUser?.authentication;
@@ -15,7 +16,6 @@ Future<dynamic> signInWithGoogle() async {
 
     return await FirebaseAuth.instance.signInWithCredential(credential);
   } on Exception catch (e) {
-    // TODO
     print('exception->$e');
   }
 }

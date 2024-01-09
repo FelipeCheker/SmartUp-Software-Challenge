@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-import 'package:twitterapp/auth/services/user.dart';
 import 'package:twitterapp/screens/homeScreen.dart';
 
 class getPassSingUp extends StatelessWidget {
@@ -121,7 +120,6 @@ class getPassSingUp extends StatelessWidget {
                   if (passwordController.text.isNotEmpty) {
                     signUpAction(context);
                   } else {
-                    // Show a dialog, snackbar, or message indicating that the password field is required
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {

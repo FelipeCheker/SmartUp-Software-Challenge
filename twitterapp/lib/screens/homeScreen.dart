@@ -1,4 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:twitterapp/auth/services/tweetRepository.dart';
 import 'package:twitterapp/screens/tweetScreen.dart';
 import 'package:twitterapp/auth/tweet.dart';
 
@@ -10,33 +14,26 @@ class homeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<homeScreen> {
-  List<Tweet> tweets = []; // Lista para almacenar los tweets
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final FirebaseStorage firestorage = FirebaseStorage.instance;
 
+  List<Tweet> tweets = [];
   @override
   void initState() {
-    tweets = [
-      Tweet(
-        userName: 'Username',
-        userHandle: '@userhandle',
-        tweetContent: 'This is a trending tweet! #Flutter #TwitterClone',
-      ),
-      Tweet(
-        userName: 'AnotherUser',
-        userHandle: '@anotherhandle',
-        tweetContent: 'Another trending tweet! 🚀',
-      ),
-      Tweet(
-        userName: 'User3',
-        userHandle: '@user3handle',
-        tweetContent: 'Check out this cool tweet! 👍',
-      ),
-      Tweet(
-        userName: 'User4',
-        userHandle: '@user4handle',
-        tweetContent: 'Just posted another tweet! #Flutter',
-      ),
-    ];
+    loadTweets();
     super.initState();
+  }
+
+  Future<void> loadTweets() async {
+    TweetRepository tweetRepository =
+        TweetRepository(firestore: firestore, firestorage: firestorage);
+    List<Tweet>? loadedTweets = await tweetRepository.getAllTweets();
+
+    if (loadedTweets != null) {
+      setState(() {
+        tweets = loadedTweets;
+      });
+    }
   }
 
   @override
@@ -54,9 +51,15 @@ class _HomeScreenState extends State<homeScreen> {
           ),
         ),
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.menu, color: Colors.blue),
-          onPressed: () {},
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(Icons.menu, color: Colors.blue),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          },
         ),
         actions: [
           IconButton(
@@ -64,6 +67,38 @@ class _HomeScreenState extends State<homeScreen> {
             onPressed: () {},
           ),
         ],
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            const UserAccountsDrawerHeader(
+              accountName: Text(''),
+              accountEmail: Text(''),
+              currentAccountPicture: CircleAvatar(
+                child: Icon(Icons.account_circle),
+              ),
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.people),
+              title: Text('Following'),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: Icon(Icons.people_outline),
+              title: Text('Followers'),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: Icon(Icons.list),
+              title: Text('Lists'),
+              onTap: () {},
+            ),
+          ],
+        ),
       ),
       body: ListView(
         padding: const EdgeInsets.symmetric(vertical: 10),
@@ -73,7 +108,7 @@ class _HomeScreenState extends State<homeScreen> {
             height: 80,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: 10, // Cantidad de historias
+              itemCount: 10,
               itemBuilder: (context, index) {
                 return const Padding(
                   padding: EdgeInsets.all(8.0),
@@ -130,6 +165,16 @@ class _HomeScreenState extends State<homeScreen> {
     );
   }
 
+  String getUsername() {
+    User? user = FirebaseAuth.instance.currentUser;
+    return (user?.displayName ?? 'DefaultUsername');
+  }
+
+  String getEmail() {
+    User? user = FirebaseAuth.instance.currentUser;
+    return (user?.email ?? 'DefaultUsername');
+  }
+
   Widget _buildSectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -157,18 +202,17 @@ class _HomeScreenState extends State<homeScreen> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CircleAvatar(
+              const CircleAvatar(
                 backgroundColor: Colors.blue,
                 radius: 20,
-                // Aquí puedes agregar la imagen del usuario
               ),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     tweet.userName,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                     ),
@@ -194,21 +238,15 @@ class _HomeScreenState extends State<homeScreen> {
             children: [
               IconButton(
                 icon: const Icon(Icons.repeat, color: Colors.grey),
-                onPressed: () {
-                  // Acción al presionar el ícono de retweet
-                },
+                onPressed: () {},
               ),
               IconButton(
                 icon: const Icon(Icons.favorite_border, color: Colors.grey),
-                onPressed: () {
-                  // Acción al presionar el ícono de like
-                },
+                onPressed: () {},
               ),
               IconButton(
                 icon: const Icon(Icons.share, color: Colors.grey),
-                onPressed: () {
-                  // Acción al presionar el ícono de compartir
-                },
+                onPressed: () {},
               ),
             ],
           ),
